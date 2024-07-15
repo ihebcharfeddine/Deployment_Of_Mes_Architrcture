@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create New Item</title>
+  </head>
+  <body>
+    <h1>Create New Item</h1>
+    <form id="create-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+      <br />
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" required></textarea>
+      <br />
+      <button type="submit">Create Item</button>
+    </form>
+    <a href="/">Back to Home</a>
+    <script>
+      document
+        .getElementById("create-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const name = document.getElementById("name").value;
+          const description = document.getElementById("description").value;
+
+          fetch("/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, description }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (!data.error) {
+                alert(data.message);
+                window.location.href = "/";
+              } else {
+                console.error("Error creating item:", data.message);
+              }
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
+  </body>
+</html>

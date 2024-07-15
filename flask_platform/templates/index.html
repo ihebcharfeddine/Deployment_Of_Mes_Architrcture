@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Items</title>
+  </head>
+  <body>
+    <h1>Items</h1>
+    <button onclick="window.location.href='/create.html'">
+      Create New Item
+    </button>
+    <table border="1" id="items-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Items will be populated here -->
+      </tbody>
+    </table>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("/items")
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.error) {
+              const tableBody = document.querySelector("#items-table tbody");
+              data.data.forEach((item) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                                <td>${item.id}</td>
+                                <td>${item.name}</td>
+                                <td>${item.description}</td>
+                                <td>
+                                    <button onclick="window.location.href='/update.html?id=${item.id}'">Update</button>
+                                    <button onclick="deleteItem(${item.id})">Delete</button>
+                                </td>
+                            `;
+                tableBody.appendChild(row);
+              });
+            } else {
+              console.error("Error fetching items:", data.message);
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      });
+
+      function deleteItem(id) {
+        fetch(`/delete/${id}`, { method: "DELETE" })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.error) {
+              location.reload();
+            } else {
+              console.error("Error deleting item:", data.message);
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>
