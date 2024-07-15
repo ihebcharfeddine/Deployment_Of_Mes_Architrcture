@@ -1,3 +1,0 @@
-Flask==2.2.2
-mysqlclient==2.0.3
-Werkzeug==2.2.2
