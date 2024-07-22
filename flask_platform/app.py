@@ -4,8 +4,8 @@ import pymysql
 app = Flask(__name__)
 
 # Configure MySQL connection parameters
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306  # Specify the port number
+app.config['MYSQL_HOST'] = 'mysql-db'
+app.config['MYSQL_PORT'] = 3306  
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'rootpass'
 app.config['MYSQL_DB'] = 'mes_db'
