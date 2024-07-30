@@ -15,7 +15,7 @@ class StudentsSeeder extends Seeder
         $faker = \Faker\Factory::create();
 
         for ($i = 0; $i < 50; $i++) {
-            DB::table('students')->insert([
+            DB::table('student')->insert([
                 'name' => $faker->name,
                 'age' => $faker->numberBetween(18, 25),
             ]);
