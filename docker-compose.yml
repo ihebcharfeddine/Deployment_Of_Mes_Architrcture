@@ -1,0 +1,76 @@
+version: "3.8"
+services:
+  app:
+    image: rest-api-image
+    container_name: mobile-api
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./rest_api:/var/www
+    networks:
+      - my-network
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    container_name: mysql-db
+    environment:
+      MYSQL_DATABASE: mes_db
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - my-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: my-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql-db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpass
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    networks:
+      - my-network
+
+  web:
+    image: flask-app-image
+    build: ./web_platform
+    container_name: my-flask-app
+    networks:
+      - my-network
+    ports:
+      - 5000:5000
+
+  iot:
+    image: my-node-api
+    build: ./iot_api
+    container_name: iot-api-container
+    ports:
+      - 3000:3000
+    networks:
+      - my-network
+
+  dashboard:
+    image: dashboard-api-image
+    build: ./dashboard_api
+    container_name: dashboard-api-container
+    ports:
+      - 3001:3001
+    networks:
+      - my-network
+
+networks:
+  my-network:
+
+volumes:
+  mysql-data:
+

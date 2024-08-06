@@ -4,8 +4,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: smartbox-api-image
-    container_name: smartbox-api-container
+    image: mobile-api-image
+    container_name: mobile-api-container
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
