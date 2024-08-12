@@ -11,31 +11,37 @@ services:
     volumes:
       - ./:/var/www
     networks:
-      - mes-network  
- 
+      - mes-network
+
   db:
     image: mysql:5.7
     container_name: mysql-db
-    restart: unless-stopped
     environment:
       MYSQL_DATABASE: mes_db
       MYSQL_ROOT_PASSWORD: rootpass
+    restart: unless-stopped
     volumes:
       - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql
     networks:
       - mes-network
-  
+    ports:
+      - 3306:3306
+
   dash-nginx:
     image: nginx:alpine
     container_name: dash-api-nginx
     restart: unless-stopped
     ports:
-      - 8002:80
+      - 8001:80
     volumes:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - mes-network
+    depends_on:
+      - app
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
@@ -47,8 +53,10 @@ services:
       - 8080:80
     networks:
       - mes-network
-  
+
 networks:
   mes-network:
     driver: bridge
 
+volumes:
+  mysql-data:
