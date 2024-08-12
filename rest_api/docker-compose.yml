@@ -11,7 +11,7 @@ services:
     volumes:
       - ./:/var/www
     networks:
-      - mes-network
+      - mes-network  
 
   db:
     image: mysql:5.7
@@ -36,8 +36,23 @@ services:
       - ./docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - mes-network
+    depends_on:
+      - app
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - 8080:80
+    networks:
+      - mes-network
+  
 networks:
   mes-network:
     driver: bridge
+
 
