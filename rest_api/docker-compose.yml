@@ -7,11 +7,12 @@ services:
     image: mobile-api-image
     container_name: mobile-api-container
     restart: unless-stopped
-    working_dir: /var/www/
     volumes:
       - ./:/var/www
     networks:
-      - mes-network  
+      - mes-network
+    depends_on:
+      - db
 
   db:
     image: mysql:5.7
@@ -21,10 +22,10 @@ services:
       MYSQL_DATABASE: mes_db
       MYSQL_ROOT_PASSWORD: rootpass
     volumes:
-      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/MySQL
     networks:
       - mes-network
-  
+
   nginx:
     image: nginx:alpine
     container_name: php-api-nginx
@@ -32,7 +33,7 @@ services:
     ports:
       - 8000:80
     volumes:
-      - ./:/var/www
+      - ./public:/var/www/public
       - ./docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - mes-network
@@ -45,14 +46,15 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: rootpass
+      PMA_PASSWORD: rootpass
     ports:
       - 8080:80
     networks:
       - mes-network
-  
+
 networks:
   mes-network:
     driver: bridge
 
-
+volumes:
+  mysql-data:

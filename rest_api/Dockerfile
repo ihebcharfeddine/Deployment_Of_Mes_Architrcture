@@ -22,10 +22,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-COPY . .
-
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY rest_entrypoint.sh /rest_entrypoint.sh
+RUN chmod +x /rest_entrypoint.sh
 
 CMD ["php-fpm"]
 
