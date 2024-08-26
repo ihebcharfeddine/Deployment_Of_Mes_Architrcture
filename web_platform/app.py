@@ -4,7 +4,7 @@ import pymysql
 app = Flask(__name__)
 
 # Configure MySQL connection parameters
-app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_HOST'] = 'mysql-db'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'rootpass'
@@ -30,8 +30,9 @@ def index():
         cursor.execute('SELECT * FROM posts')
         posts = cursor.fetchall()
         # Fetch students data
-        cursor.execute('SELECT * FROM students')
+        cursor.execute('SELECT * FROM student')
         students = cursor.fetchall()
+
         cursor.close()
         connection.close()
         return render_template('index.html', posts=posts, students=students)
@@ -40,4 +41,4 @@ def index():
         return "An error occurred", 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000)
+    app.run(host='0.0.0.0', port=5000)

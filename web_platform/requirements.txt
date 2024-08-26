@@ -1,3 +1,0 @@
-Flask=3.0.3
-pymysql
-Werkzeug=3.0.3
