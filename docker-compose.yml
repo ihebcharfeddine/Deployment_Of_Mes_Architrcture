@@ -1,5 +1,16 @@
 version: '3.7'
 services:
+  flask_app:
+    image: flask-app-image
+    container_name: flask-app-container
+    restart: unless-stopped
+    ports:
+      - 5000:5000
+    networks:
+      - mes-network
+    depends_on:
+      - db
+
   # Mobile API PHP-FPM Service
   mobile_api_fpm:
     build:
@@ -8,7 +19,6 @@ services:
     image: mobile-api-image
     container_name: mobile-api-container
     restart: unless-stopped
-    working_dir: /var/www/
     volumes:
       - ./rest_api:/var/www
     networks:
@@ -24,7 +34,6 @@ services:
     image: iot-api-image
     container_name: iot-api-container
     restart: unless-stopped
-    working_dir: /var/www/
     volumes:
       - ./iot_api:/var/www
     networks:
@@ -40,7 +49,6 @@ services:
     image: dashboard-api-image
     container_name: dashboard-api-container
     restart: unless-stopped
-    working_dir: /var/www/
     volumes:
       - ./dashboard_api:/var/www
     networks:
@@ -66,10 +74,8 @@ services:
     image: nginx:alpine
     container_name: mobile-api-nginx
     restart: unless-stopped
-    ports:
-      - 8000:80
     volumes:
-      - ./rest_api:/var/www
+      - ./rest_api/public:/var/www/public
       - ./rest_api/docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - mes-network
@@ -81,10 +87,8 @@ services:
     image: nginx:alpine
     container_name: iot-api-nginx
     restart: unless-stopped
-    ports:
-      - 8001:80
     volumes:
-      - ./iot_api:/var/www
+      - ./iot_api/public:/var/www/public
       - ./iot_api/docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - mes-network
@@ -96,10 +100,8 @@ services:
     image: nginx:alpine
     container_name: dashboard-api-nginx
     restart: unless-stopped
-    ports:
-      - 8002:80
     volumes:
-      - ./dashboard_api:/var/www
+      - ./dashboard_api/public:/var/www/public
       - ./dashboard_api/docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - mes-network
@@ -115,7 +117,7 @@ services:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: rootpass
     ports:
-      - 8080:80
+      - 8081:80
     networks:
       - mes-network
 
