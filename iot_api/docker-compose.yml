@@ -12,9 +12,10 @@ services:
       - ./:/var/www
     networks:
       - mes-network
+    command: ["php-fpm"]
 
   db:
-    image: mysql:5.7
+    image: mysql:latest
     container_name: mysql-db
     environment:
       MYSQL_DATABASE: mes_db
@@ -27,7 +28,7 @@ services:
     networks:
       - mes-network
 
-  dash-nginx:
+  iot-nginx:
     image: nginx:alpine
     container_name: iot-nginx
     restart: unless-stopped
